@@ -21,18 +21,21 @@ class UserSeeder extends Seeder
                 'email' => 'admin@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'admin',
+                'is_active' => true,
             ],
             [
                 'name' => 'Doctor',
                 'email' => 'doctor@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'doctor',
+                'is_active' => true,
             ],
             [
                 'name' => 'Nurse',
                 'email' => 'nurse@gmail.com',
                 'password' => Hash::make('password'),
                 'role' => 'nurse',
+                'is_active' => true,
             ],
         ]);
     }
