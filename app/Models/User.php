@@ -31,6 +31,11 @@ class User extends Authenticatable
         return $this->hasMany(Patient::class);
     }
 
+    public function hasRole(string $role): bool
+    {
+        return $this->role === $role;
+    }
+
     /**
      * The attributes that should be hidden for serialization.
      *

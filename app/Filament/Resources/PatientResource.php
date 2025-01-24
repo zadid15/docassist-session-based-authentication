@@ -19,7 +19,7 @@ class PatientResource extends Resource
 {
     protected static ?string $model = Patient::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    protected static ?string $navigationIcon = 'heroicon-o-user-group';
 
     protected static ?string $navigationGroup = 'System Management';
 
@@ -58,7 +58,7 @@ class PatientResource extends Resource
 
                 Hidden::make('user_id')
                     ->label('User ID')
-                    ->default(fn () => auth()->id()), 
+                    ->default(fn() => auth()->id()),
             ]);
     }
 
@@ -94,8 +94,8 @@ class PatientResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(), // Delete dalam grup bulk actions
-                ]),
+                    Tables\Actions\DeleteBulkAction::make(),
+                ])->authorize(fn() => auth()->user()->hasRole('admin') && auth()->user()->is_active),
             ]);
     }
 
