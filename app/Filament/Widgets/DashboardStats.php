@@ -24,8 +24,16 @@ class DashboardStats extends BaseWidget
                 ->description('Total number of scheduled appointments')
                 ->icon('heroicon-o-calendar'),
 
+            Stat::make('Completed Appointments', Appointment::where('status', 'Completed')->count())
+                ->description('Number of completed appointments')
+                ->icon('heroicon-o-check-circle'),
+
             Stat::make('Total Invoices', Invoice::count())
                 ->description('Total number of issued invoices')
+                ->icon('heroicon-o-credit-card'),
+
+            Stat::make('Total Invoices Paid', Invoice::where('payment_status', 'paid')->count())
+                ->description('Total number of paid invoices')
                 ->icon('heroicon-o-credit-card'),
 
             Stat::make('Total Doctors', User::where('role', 'doctor')->count())
@@ -35,10 +43,6 @@ class DashboardStats extends BaseWidget
             Stat::make('Total Medical Records', MedicalRecord::count())
                 ->description('Total number of medical records')
                 ->icon('heroicon-o-document-text'),
-
-            Stat::make('Completed Appointments', Appointment::where('status', 'Completed')->count())
-                ->description('Number of completed appointments')
-                ->icon('heroicon-o-check-circle'),
         ];
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Resources;
 use App\Filament\Resources\AppointmentResource\Pages;
 use App\Filament\Resources\AppointmentResource\RelationManagers;
 use App\Models\Appointment;
+use App\Models\User;
 use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
@@ -48,11 +49,19 @@ class AppointmentResource extends Resource
                         'pending' => 'Pending',
                         'accepted' => 'Accepted',
                         'rejected' => 'Rejected',
+                        'completed' => 'Completed',
                     ])
                     ->required(),
 
-                Hidden::make('doctor_id')
-                    ->default(fn() => auth()->id()),
+                    Select::make('doctor_id')
+                    ->label('Doctor')
+                    ->relationship('doctor', 'name') // Relasi yang benar
+                    ->required()
+                    ->options(function () {
+                        return User::where('role', 'doctor')->pluck('name', 'id'); // Ambil ID dan nama dokter
+                    })
+                
+
             ]);
     }
 
@@ -73,7 +82,7 @@ class AppointmentResource extends Resource
                     ->label('Status'),
 
                 TextColumn::make('doctor.name')
-                    ->label('Assigned Doctor')
+                    ->label('Doctor')
                     ->limit(20),
             ])
             ->filters([
