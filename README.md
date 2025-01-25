@@ -1,66 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# DocAssist
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+**DocAssist** is a lightweight web application designed to streamline operations for small clinics and healthcare facilities. It provides tools for managing patients, scheduling appointments, maintaining medical records, and tracking invoices. With robust session-based authentication and role-based access control, the platform ensures data security and accessibility for different types of users.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### 1. **Patient Management**
+- Store and organize patient details, including:
+  - Name, email, phone number, address, date of birth, and gender.
+- Quickly access and update patient records.
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### 2. **Appointment Scheduling**
+- Manage appointments between patients and doctors.
+- Track appointment statuses (Pending, Completed, or Rejected).
+- View and handle both upcoming and past appointments.
 
-## Learning Laravel
+### 3. **Medical Records**
+- Keep comprehensive medical records for patients:
+  - Doctor’s name
+  - Diagnosis
+  - Prescriptions
+  - Additional notes
+- Easily retrieve historical records for patient care continuity.
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### 4. **Invoice Tracking**
+- Generate and manage invoices for patient services.
+- Monitor payment statuses (Paid or Unpaid).
+- Simplify the billing process for healthcare facilities.
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+### 5. **Secure Session-Based Authentication**
+- Protect sensitive data using session-based authentication.
+- Enable role-based access control (Admin, Doctor, Nurse) for appropriate access levels.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## Database Structure
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### **1. Users Table**  
+| Column       | Type                           | Description              |
+|--------------|--------------------------------|--------------------------|
+| id           | BIGINT                         | Primary key              |
+| name         | VARCHAR(255)                   | User name                |
+| email        | VARCHAR(255)                   | User email               |
+| password     | VARCHAR(255)                   | User password            |
+| role         | ENUM('admin','doctor','nurse') | User role                |
+| is_active    | BOOLEAN                        | User account status      |
+| created_at   | TIMESTAMP                      | Record creation date     |
+| updated_at   | TIMESTAMP                      | Record update date       |
 
-### Premium Partners
+### **2. Patients Table**  
+| Column       | Type                  | Description              |
+|--------------|-----------------------|--------------------------|
+| id           | BIGINT                | Primary key              |
+| name         | VARCHAR(255)          | Patient name             |
+| email        | VARCHAR(255)          | Patient email            |
+| phone        | VARCHAR(20)           | Patient phone number     |
+| address      | TEXT                  | Patient address          |
+| dob          | DATE                  | Patient date of birth    |
+| gender       | ENUM('male','female') | Patient gender           |
+| created_at   | TIMESTAMP             | Record creation date     |
+| updated_at   | TIMESTAMP             | Record update date       |
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### **3. Medical Records Table**  
+| Column       | Type                | Description              |
+|--------------|---------------------|--------------------------|
+| id           | BIGINT              | Primary key              |
+| patient_id   | BIGINT              | Foreign key to patients  |
+| doctor_id    | BIGINT              | Foreign key to users     |
+| diagnosis    | TEXT                | Diagnosis details        |
+| prescription | TEXT                | Prescription information |
+| notes        | TEXT                | Additional notes         |
+| created_at   | TIMESTAMP           | Record creation date     |
+| updated_at   | TIMESTAMP           | Record update date       |
 
-## Contributing
+### **4. Appointments Table**  
+| Column            | Type                                   | Description              |
+|-------------------|----------------------------------------|--------------------------|
+| id                | BIGINT                                 | Primary key              |
+| patient_id        | BIGINT                                 | Foreign key to patients  |
+| doctor_id         | BIGINT                                 | Foreign key to users     |
+| appointment_date  | DATETIME                               | Appointment date & time  |
+| status            | ENUM('pending','completed','rejected') | Appointment status       |
+| created_at        | TIMESTAMP                              | Record creation date     |
+| updated_at        | TIMESTAMP                              | Record update date       |
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### **5. Invoices Table**  
+| Column            | Type                  | Description              |
+|-------------------|-----------------------|--------------------------|
+| id                | BIGINT                | Primary key              |
+| patient_id        | BIGINT                | Foreign key to patients  |
+| amount            | DECIMAL(10,2)         | Invoice amount           |
+| payment_status    | ENUM('Paid','Unpaid') | Payment status           |
+| created_at        | TIMESTAMP             | Record creation date     |
+| updated_at        | TIMESTAMP             | Record update date       |
 
-## Code of Conduct
+---
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Installation
 
-## Security Vulnerabilities
+### Prerequisites
+- PHP 8.0 or higher
+- Composer
+- MySQL or a supported database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Steps to Install
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/zadid15/docassist-session-based-authentication.git
+   cd docassist-session-based-authentication
+   ```
 
-## License
+2. Install backend and frontend dependencies:
+   ```bash
+   composer install
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+3. Configure the `.env` file:
+   ```bash
+   cp .env.example .env
+   ```
+   Update database credentials and other environment variables.
+
+4. Run migrations and seeders to set up the database:
+   ```bash
+   php artisan migrate --seed
+   ```
+
+5. Start the development server:
+   ```bash
+   php artisan serve
+   ```
+   Visit the application at `http://localhost:8000`.
+
+---
