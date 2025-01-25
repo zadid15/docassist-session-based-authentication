@@ -90,7 +90,7 @@
 |-------------------|-----------------------|--------------------------|
 | id                | BIGINT                | Primary key              |
 | patient_id        | BIGINT                | Foreign key to patients  |
-| amount            | DECIMAL(10,2)         | Invoice amount           |
+| amount            | UNSIGNEDBIGINTEGER    | Invoice amount           |
 | payment_status    | ENUM('Paid','Unpaid') | Payment status           |
 | created_at        | TIMESTAMP             | Record creation date     |
 | updated_at        | TIMESTAMP             | Record update date       |
