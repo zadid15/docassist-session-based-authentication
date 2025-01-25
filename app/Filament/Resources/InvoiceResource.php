@@ -76,7 +76,7 @@ class InvoiceResource extends Resource
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
-                ]),
+                ])->authorize(fn() => auth()->user()->hasRole('admin') && auth()->user()->is_active),
             ]);
     }
 
