@@ -21,9 +21,11 @@ class PatientPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, Patient $patient): bool
+    public function view(User $user): Response
     {
-        return false;
+        return in_array($user->role, ['admin', 'doctor', 'nurse']) && $user->is_active
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**

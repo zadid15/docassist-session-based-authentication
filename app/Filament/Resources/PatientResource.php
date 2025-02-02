@@ -8,9 +8,11 @@ use Filament\Forms;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -66,31 +68,39 @@ class PatientResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('ID')
+                    ->sortable()
+                    ->searchable(),
+
                 TextColumn::make('name')
                     ->label('Name')
-                    ->sortable()
                     ->searchable()
                     ->limit(50),
-
-                TextColumn::make('address')
-                    ->label('Address')
-                    ->sortable()
-                    ->searchable()
-                    ->limit(50),
-
-                TextColumn::make('dob')
-                    ->label('Date of Birth')
-                    ->sortable()
-                    ->date(),
 
                 TextColumn::make('gender')
-                    ->label('Gender'),
+                    ->label('Gender')
+                    ->formatStateUsing(function ($state) {
+                        // Format teks status
+                        return match ($state) {
+                            'male' => 'Male',
+                            'female' => 'Female',
+                            default => $state, // Default jika nilai tidak sesuai
+                        };
+                    })
             ])
             ->filters([
                 // Tambahkan filter di sini jika perlu
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->color('gray')
+                    ->label('View Detail')
+                    ->iconPosition(IconPosition::After),
+
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->iconPosition(IconPosition::After)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

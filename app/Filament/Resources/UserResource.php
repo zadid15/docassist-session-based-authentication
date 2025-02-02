@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -66,13 +67,26 @@ class UserResource extends Resource
                     ->label('Email'),
 
                 TextColumn::make('role')
-                    ->label('Role'),
+                    ->label('Role')
+                    ->formatStateUsing(fn(string|int|null $state): string => match ($state) {
+                        'admin' => 'Admin',
+                        'doctor' => 'Doctor',
+                        'nurse' => 'Nurse',
+                    })
+                    ->badge()
+                    ->colors([
+                        'info' => 'admin',
+                        'success' => 'doctor',
+                        'warning' => 'nurse',
+                    ]),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->iconPosition(IconPosition::After)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

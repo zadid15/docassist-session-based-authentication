@@ -21,9 +21,11 @@ class MedicalRecordPolicy
     /**
      * Determine whether the user can view the model.
      */
-    public function view(User $user, MedicalRecord $medicalRecord): bool
+    public function view(User $user): Response
     {
-        return false;
+        return in_array($user->role, ['admin', 'doctor']) && $user->is_active
+            ? Response::allow()
+            : Response::deny();
     }
 
     /**

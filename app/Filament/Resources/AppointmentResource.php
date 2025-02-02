@@ -13,6 +13,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -53,14 +54,14 @@ class AppointmentResource extends Resource
                     ])
                     ->required(),
 
-                    Select::make('doctor_id')
+                Select::make('doctor_id')
                     ->label('Doctor')
                     ->relationship('doctor', 'name') // Relasi yang benar
                     ->required()
                     ->options(function () {
                         return User::where('role', 'doctor')->pluck('name', 'id'); // Ambil ID dan nama dokter
                     })
-                
+
 
             ]);
     }
@@ -79,7 +80,20 @@ class AppointmentResource extends Resource
                     ->date(),
 
                 TextColumn::make('status')
-                    ->label('Status'),
+                    ->label('Status')
+                    ->formatStateUsing(fn(string|int|null $state): string => match ($state) {
+                        'pending' => 'Pending',
+                        'accepted' => 'Accepted',
+                        'rejected' => 'Rejected',
+                        'completed' => 'Completed',
+                    })
+                    ->badge()
+                    ->colors([
+                        'warning' => 'pending',
+                        'success' => 'accepted',
+                        'danger' => 'rejected',
+                        'info' => 'completed',
+                    ]),
 
                 TextColumn::make('doctor.name')
                     ->label('Doctor')
@@ -89,7 +103,9 @@ class AppointmentResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->iconPosition(IconPosition::After)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

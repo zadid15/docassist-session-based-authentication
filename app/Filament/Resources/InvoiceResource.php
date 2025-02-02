@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -61,17 +62,27 @@ class InvoiceResource extends Resource
                 TextColumn::make('amount')
                     ->label('Amount')
                     ->limit(50)
-                    ->formatStateUsing(fn (string|int|null $state): string => 'Rp ' . number_format($state, 0, ',', '.')),
+                    ->formatStateUsing(fn(string|int|null $state): string => 'Rp ' . number_format($state, 0, ',', '.')),
 
                 TextColumn::make('payment_status')
                     ->label('Payment Status')
-                    ->limit(50),
+                    ->badge()
+                    ->formatStateUsing(fn(string|int|null $state): string => match ($state) {
+                        'paid' => 'Paid',
+                        'unpaid' => 'Unpaid',
+                    })
+                    ->colors([
+                        'success' => 'paid',
+                        'danger' => 'unpaid',
+                    ])
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->iconPosition(IconPosition::After)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([

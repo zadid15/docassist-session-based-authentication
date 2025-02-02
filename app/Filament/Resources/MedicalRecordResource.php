@@ -11,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
+use Filament\Support\Enums\IconPosition;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -76,7 +77,14 @@ class MedicalRecordResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\ViewAction::make()
+                    ->color('gray')
+                    ->label('View Detail')
+                    ->iconPosition(IconPosition::After),
+
+                Tables\Actions\EditAction::make()
+                    ->label('Edit')
+                    ->iconPosition(IconPosition::After)
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
